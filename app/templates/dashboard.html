@@ -51,7 +51,7 @@
 
     <!-- Header -->
     <div class="header-box text-center">
-        <h1 class="mb-3">📚 Library Management System</h1>
+        <h1 class="mb-3">📚 CICD For Library Management System</h1>
 
         <p class="text-muted">
             Mini Project using Flask + Jenkins + Docker + CI/CD Pipeline
@@ -82,6 +82,18 @@
 
         </div>
     </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mt-3">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'info' }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
     <!-- Books Table -->
     <div class="table-container mt-4">

@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, render_template, request, redirect
+from flask import Blueprint, flash, jsonify, render_template, request, redirect
 from .models import Book, User
 from .extensions import db
 
@@ -127,3 +127,59 @@ def issue_book():
             })
 
     return render_template('issue.html')
+
+
+# -----------------------
+# Add Sample Data
+# -----------------------
+@bp.route('/add_sample')
+def add_sample():
+    sample_books = [
+        {'title': 'The Great Gatsby', 'author': 'F. Scott Fitzgerald'},
+        {'title': 'To Kill a Mockingbird', 'author': 'Harper Lee'},
+        {'title': '1984', 'author': 'George Orwell'},
+    ]
+
+    sample_users = [
+        {'name': 'Alice'},
+        {'name': 'Bob'},
+    ]
+
+    # remove exact duplicate book rows
+    seen_books = set()
+    for book in Book.query.order_by(Book.id).all():
+        key = (book.title, book.author)
+        if key in seen_books:
+            db.session.delete(book)
+        else:
+            seen_books.add(key)
+
+    # remove exact duplicate user rows
+    seen_users = set()
+    for user in User.query.order_by(User.id).all():
+        if user.name in seen_users:
+            db.session.delete(user)
+        else:
+            seen_users.add(user.name)
+
+    added = False
+    for b in sample_books:
+        existing_book = Book.query.filter_by(title=b['title'], author=b['author']).first()
+        if not existing_book:
+            db.session.add(Book(title=b['title'], author=b['author']))
+            added = True
+
+    for u in sample_users:
+        existing_user = User.query.filter_by(name=u['name']).first()
+        if not existing_user:
+            db.session.add(User(name=u['name']))
+            added = True
+
+    if added:
+        flash('Sample data has been added to the library.', 'success')
+    else:
+        flash('Sample data is already present and duplicate rows were cleaned.', 'info')
+
+    db.session.commit()
+
+    return redirect('/')
