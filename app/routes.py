@@ -139,16 +139,16 @@ def issue_book():
 def return_book(id):
     book = Book.query.get(id)
 
-   
     if book and not book.available:
-        book.available = False
+        book.available = True
         db.session.commit()
         flash('Book returned successfully.', 'success')
-
     elif book:
         flash('Book is already available.', 'info')
 
     return redirect('/books')
+
+
 # -----------------------
 # Add Sample Data
 # -----------------------
