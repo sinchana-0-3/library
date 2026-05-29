@@ -7,7 +7,7 @@ def test_home_page():
     app = create_app({'TESTING': True, 'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:'})
     client = app.test_client()
 
-    response = client.get('\')
+    response = client.get('/')
 
     assert response.status_code == 200
 
