@@ -139,7 +139,7 @@ def issue_book():
 def return_book(id):
     book = Book.query.get(id)
 
-    # INTENTIONALLY WRONG FOR CI/CD FAILURE DEMO
+   
     if book and not book.available:
         book.available = False
         db.session.commit()
