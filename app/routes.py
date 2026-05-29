@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, jsonify, render_template, request, redirect
+from flask import Blueprint, flash, render_template, request, redirect
 from .models import Book, User
 from .extensions import db
 
@@ -111,22 +111,39 @@ def delete_user(id):
 # -----------------------
 @bp.route('/issue', methods=['GET', 'POST'])
 def issue_book():
+    available_books = Book.query.filter_by(available=True).all()
 
     if request.method == 'POST':
-
-        book_id = request.form['book_id']
-
+        book_id = request.form.get('book_id')
         book = Book.query.get(book_id)
 
-        if book:
+        if book and book.available:
             book.available = False
             db.session.commit()
+            flash('Book issued successfully.', 'success')
+            return redirect('/books')
 
-            return jsonify({
-                'message': 'Book Issued Successfully'
-            })
+        flash('Unable to issue the selected book. Please try again.', 'info')
+        return redirect('/issue')
 
-    return render_template('issue.html')
+    return render_template('issue.html', available_books=available_books)
+
+
+# -----------------------
+# Return Book
+# -----------------------
+@bp.route('/return_book/<int:id>')
+def return_book(id):
+    book = Book.query.get(id)
+
+    if book and not book.available:
+        book.available = True
+        db.session.commit()
+        flash('Book returned successfully.', 'success')
+    elif book:
+        flash('Book is already available.', 'info')
+
+    return redirect('/books')
 
 
 # -----------------------

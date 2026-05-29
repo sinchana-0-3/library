@@ -91,14 +91,17 @@
                     </td>
 
                     <td>
+                        <div class="d-flex gap-2">
+                            {% if not book.available %}
+                                <a href="/return_book/{{ book.id }}" class="btn btn-secondary btn-sm">
+                                    Return
+                                </a>
+                            {% endif %}
 
-                        <a href="/delete_book/{{ book.id }}"
-                           class="btn btn-danger btn-sm">
-
-                            Delete
-
-                        </a>
-
+                            <a href="/delete_book/{{ book.id }}" class="btn btn-danger btn-sm">
+                                Delete
+                            </a>
+                        </div>
                     </td>
 
                 </tr>

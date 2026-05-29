@@ -108,6 +108,7 @@
                     <th>Book Title</th>
                     <th>Author</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
 
@@ -131,6 +132,16 @@
                             <span class="status-issued">
                                 Issued
                             </span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if not book.available %}
+                            <a href="/return_book/{{ book.id }}" class="btn btn-secondary btn-sm">
+                                Return
+                            </a>
+                        {% else %}
+                            <span class="text-muted">—</span>
                         {% endif %}
                     </td>
 
