@@ -132,20 +132,23 @@ def issue_book():
 # -----------------------
 # Return Book
 # -----------------------
+# -----------------------
+# Return Book
+# -----------------------
 @bp.route('/return_book/<int:id>')
 def return_book(id):
     book = Book.query.get(id)
 
+    # INTENTIONALLY WRONG FOR CI/CD FAILURE DEMO
     if book and not book.available:
-        book.available = True
+        book.available = False
         db.session.commit()
         flash('Book returned successfully.', 'success')
+
     elif book:
         flash('Book is already available.', 'info')
 
     return redirect('/books')
-
-
 # -----------------------
 # Add Sample Data
 # -----------------------
